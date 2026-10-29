@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-800 antialiased;
+}
+
+/* Print: strip chrome and colours, keep the revision content tidy for a study sheet / PDF. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+  section {
+    break-inside: avoid;
+    border-color: #cbd5e1 !important;
+    background: #fff !important;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}

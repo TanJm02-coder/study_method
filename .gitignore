@@ -1,0 +1,16 @@
+node_modules/
+dist/
+build/
+.DS_Store
+*.log
+*.tsbuildinfo
+
+# env
+.env
+.env.local
+
+# database + uploads
+server/prisma/*.db
+server/prisma/*.db-journal
+server/uploads/*
+!server/uploads/.gitkeep

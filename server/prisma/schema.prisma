@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Subject {
+  id              String    @id @default(cuid())
+  name            String
+  examDate        DateTime?
+  preReadingDays  Int       @default(7)   // how many days before a lesson pre-reading is "due"
+  createdAt       DateTime  @default(now())
+
+  weeks Week[]
+}
+
+model Week {
+  id          String   @id @default(cuid())
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  number      Int           // week / lesson number
+  title       String        // e.g. "Thermodynamics: First Law"
+  lessonDate  DateTime      // when the lesson happens — drives prompting
+
+  // Before lesson (pre-reading)
+  beforeNotes String   @default("")  // what I already know / goals
+  preReadDone Boolean  @default(false)
+
+  // After lesson (consolidation)
+  afterNotes  String   @default("")  // what I actually learned
+  afterDone   Boolean  @default(false)
+  understanding Int?    // self-rating 1..5
+
+  createdAt   DateTime @default(now())
+
+  files File[]
+
+  @@unique([subjectId, number])
+}
+
+model File {
+  id           String   @id @default(cuid())
+  weekId       String
+  week         Week     @relation(fields: [weekId], references: [id], onDelete: Cascade)
+
+  originalName String
+  storedName   String   // name on disk
+  mimeType     String
+  size         Int
+  category     String   @default("material") // "preReading" | "pastQuestion" | "material"
+  createdAt    DateTime @default(now())
+}
